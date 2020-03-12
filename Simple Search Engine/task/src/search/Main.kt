@@ -1,7 +1,11 @@
 package search
 
-fun main() {
-    val data = enterData()
+import java.io.File
+
+fun main(args: Array<String>) {
+    val data =
+        if (args.size == 2 && args[0] == "--data") importData(args[1])
+        else enterData()
     println()
     loop@ while (true) {
         println("=== Menu ===")
@@ -19,12 +23,12 @@ fun main() {
     println("Bye!")
 }
 
-private fun printAll(data: Array<String?>) {
+private fun printAll(data: List<String>) {
     println("=== List of people ===")
     data.forEach { println(it) }
 }
 
-private fun findPerson(data: Array<String?>) {
+private fun findPerson(data: List<String>) {
     println("Enter a name or email to search all suitable people.")
     val search = readLine()!!
     data.forEach {
@@ -34,13 +38,21 @@ private fun findPerson(data: Array<String?>) {
     }
 }
 
-private fun enterData(): Array<String?> {
+private fun enterData(): List<String> {
     println("Enter the number of people:")
     val number = readLine()!!.toInt()
-    val data = arrayOfNulls<String>(number)
+    val data = mutableListOf<String>()
     println("Enter all people:")
     for (i in 1..number) {
-        data[i - 1] = readLine()!!
+        data.add(readLine()!!)
+    }
+    return data
+}
+
+private fun importData(filename: String): List<String> {
+    val data = mutableListOf<String>()
+    File(filename).forEachLine {
+        data.add(it)
     }
     return data
 }
