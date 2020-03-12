@@ -6,6 +6,7 @@ fun main(args: Array<String>) {
     val data =
         if (args.size == 2 && args[0] == "--data") importData(args[1])
         else enterData()
+    val index = createInvertedIndex(data)
     println()
     loop@ while (true) {
         println("=== Menu ===")
@@ -14,7 +15,7 @@ fun main(args: Array<String>) {
         println("0. Exit")
         println()
         when (readLine()!!.toInt()) {
-            1 -> findPerson(data)
+            1 -> findPerson(data, index)
             2 -> printAll(data)
             0 -> break@loop
             else -> println("Incorrect option! Try again.")
@@ -28,14 +29,31 @@ private fun printAll(data: List<String>) {
     data.forEach { println(it) }
 }
 
-private fun findPerson(data: List<String>) {
+private fun findPerson(data: List<String>, index: Map<String, MutableList<Int>>) {
     println("Enter a name or email to search all suitable people.")
     val search = readLine()!!
-    data.forEach {
-        if (it!!.contains(search, true)) {
-            println(it)
+    if (index[search] == null) {
+        println("No matching people found.")
+    } else {
+        index[search]?.forEach {
+            println(data[it])
         }
     }
+}
+
+private fun createInvertedIndex(data: List<String>): Map<String, MutableList<Int>> {
+    val invertedIndex = mutableMapOf<String, MutableList<Int>>()
+    data.forEachIndexed {
+        index, line -> run {
+            val tokens = line.split(" ")
+            tokens.forEach {
+                val list = invertedIndex.getOrDefault(it, mutableListOf())
+                list.add(index)
+                invertedIndex[it] = list
+            }
+        }
+    }
+    return invertedIndex
 }
 
 private fun enterData(): List<String> {
