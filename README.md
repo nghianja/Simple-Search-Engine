@@ -1,4 +1,4 @@
-# Simple-Search-Engine
+# Project: Simple Search Engine
 ### About:
 Create your own search engine! It probably won’t compete with Google: yours will be a simple version which processes some data and searches it for a word or a phrase. Simple but cool.
 ### Learning outcomes
